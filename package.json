@@ -1,5 +1,5 @@
 {
-  "name": "custom-cli",
+  "name": "@zj/cli",
   "version": "1.0.0",
   "description": "CLI tool for initializing Vue or React projects",
   "main": "index.js",
