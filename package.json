@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "CLI tool for initializing Vue or React projects",
   "main": "src/index.js",
+  "bin": {
+    "zj-cli": "bin/zj-cli.js"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
