@@ -23,23 +23,19 @@ program.usage('<command> [options]');
  * @command init - 初始化新项目
  * @description 初始化Vue或React项目
  */
-program
-  .command('init')
-  .description('Initialize a new Vue or React project');
+program.command('init').description('Initialize a new Vue or React project');
 
 /**
  * 默认命令处理
  * 当用户未输入任何命令时显示帮助信息
  */
-program
-  .arguments('[command]')
-  .action((cmd) => {
-    if (!cmd) {
-      console.log(chalk.bold.blue('\n 🚀 Welcome to use ZJ-CLI \n'));
-      program.outputHelp(txt => txt);
-      console.log('\n run ' + chalk.green('zj-cli init') + chalk.gray(' - Initialize a new project \n'));
-    }
-  });
+program.arguments('[command]').action((cmd) => {
+  if (!cmd) {
+    console.log(chalk.bold.blue('\n 🚀 Welcome to use ZJ-CLI \n'));
+    program.outputHelp((txt) => txt);
+    console.log('\n run ' + chalk.green('zj-cli init') + chalk.gray(' - Initialize a new project \n'));
+  }
+});
 
 // 解析命令行参数
 program.parse(process.argv);
