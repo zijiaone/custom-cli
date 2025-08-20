@@ -3,6 +3,7 @@
 const { program } = require('commander');
 const chalk = require('chalk');
 const pkg = require('../package.json');
+const { init } = require('../src/index.js');
 
 /**
  * 设置命令使用说明
@@ -25,7 +26,10 @@ program.version(pkg.version, '-v, --version', 'display the current version numbe
  * @name init
  * @description 用于初始化新的Vue或React项目
  */
-program.command('init').description('Initialize a new Vue or React project');
+program
+  .command('init')
+  .description('Initialize a new Vue or React project')
+  .action(() => init());
 
 /**
  * 处理命令行参数
