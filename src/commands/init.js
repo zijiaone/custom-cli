@@ -39,8 +39,17 @@ const init = async () => {
   // 创建项目目录
   fs.mkdirSync(projectDir);
 
-  // TODO: 根据用户选择的框架复制模板文件
-  // TODO: 生成项目配置文件
+  // 根据用户选择的框架复制模板文件
+  const { framework } = answers;
+  const templateDir = path.resolve(__dirname, '../templates', framework.toLowerCase());
+
+  try {
+    // 复制模板文件到项目目录
+    await fs.copy(templateDir, projectDir);
+  } catch (error) {
+    console.error(chalk.red(`❌ Error creating project: ${error.message}`));
+    process.exit(1);
+  }
 };
 
 module.exports = {
