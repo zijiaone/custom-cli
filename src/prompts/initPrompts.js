@@ -1,2 +1,51 @@
-// init指令用户交互问题列表
-module.exports = [];
+/**
+ * @file initPrompts.js
+ * @description 项目初始化相关的所有交互提示
+ */
+
+/**
+ * 项目基本配置问题
+ * 用于收集用户在创建新项目时的基本配置选项
+ * @type {Array<Object>}
+ */
+const projectConfigPrompts = [
+  {
+    type: 'input',
+    name: 'projectName',
+    message: 'Project Name:',
+    default: 'my-project',
+    validate: (input) => {
+      if (/^[a-zA-Z0-9-_]+$/.test(input)) return true;
+      return '项目名称只能包含字母、数字、连字符和下划线';
+    },
+  },
+  {
+    type: 'list',
+    name: 'framework',
+    message: 'Select a framework:',
+    choices: ['Vue', 'React'],
+    default: 'Vue',
+  },
+];
+
+/**
+ * 覆盖确认问题
+ * 当项目目录已存在时，询问用户是否要覆盖
+ * @type {Array<Object>}
+ */
+const overwritePrompts = [
+  {
+    type: 'list',
+    name: 'overwrite',
+    message: 'Do you want to overwrite it?',
+    choices: [
+      { name: 'Yes', value: true },
+      { name: 'No', value: false },
+    ],
+  },
+];
+
+module.exports = {
+  projectConfigPrompts,
+  overwritePrompts,
+};
