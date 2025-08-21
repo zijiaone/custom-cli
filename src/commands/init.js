@@ -24,12 +24,21 @@ const init = async () => {
   // 检查项目目录是否已存在，如果存在则询问用户是否覆盖，并创建目录
   await checkDirectoryExists(projectDir);
 
-  const spinner = ora.default(`Scaffolding project in ${projectDir}...`).start();
-  spinner.stop();
+  // const spinner = ora.default(`Scaffolding project in ${projectDir}...`).start();
+  // spinner.stop();
 
   try {
     // 复制模板文件到项目目录
     await fs.copy(templateDir, projectDir);
+    console.log(`
+
+      ✅ Successfully initialized the project!
+      👉 Please execute the following command:
+
+        ${chalk.cyan(`cd ${projectName}`)}
+        ${chalk.cyan('npm install')}
+        ${chalk.cyan('npm run dev')}
+    `);
   } catch (error) {
     console.error(chalk.red(`❌ Error creating project: ${error.message}`));
     process.exit(1);

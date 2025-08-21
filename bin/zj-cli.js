@@ -45,7 +45,7 @@ program.arguments('[command]').action((cmd) => {
     // 输出帮助信息
     program.outputHelp((txt) => txt);
     // 显示init命令的提示
-    console.log('\n run ' + chalk.green('zj-cli init') + chalk.gray(' - Initialize a new project \n'));
+    console.log('\n run ' + chalk.cyan('zj-cli init') + chalk.gray(' - Initialize a new project \n'));
   }
 });
 

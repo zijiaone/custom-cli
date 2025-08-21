@@ -25,9 +25,7 @@ async function checkDirectoryExists(dirPath) {
     if (overwrite) {
       const spinner = ora.default(`Removing target directory (${dirPath})`).start();
       await fs.rmSync(dirPath, { recursive: true, force: true });
-      setTimeout(() => {
-        spinner.stop();
-      }, 1000);
+      spinner.stop();
     } else {
       // 用户选择不覆盖，取消操作并退出程序
       console.log(chalk.red('❌ Operation cancelled'));
