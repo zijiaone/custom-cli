@@ -35,13 +35,9 @@ const projectConfigPrompts = [
  */
 const overwritePrompts = [
   {
-    type: 'list',
+    type: 'confirm',
     name: 'overwrite',
-    message: 'Do you want to overwrite it?',
-    choices: [
-      { name: 'Yes', value: true },
-      { name: 'No', value: false },
-    ],
+    message: 'Continue will overwrite the folder',
   },
 ];
 
