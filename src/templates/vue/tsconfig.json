@@ -1,0 +1,24 @@
+{
+  // 继承自 "@vue/tsconfig/tsconfig.dom.json"，表示当前配置继承自该基础配置文件。
+  // 这个基础文件通常包含 Vue 项目所需的默认 TypeScript 配置（适用于浏览器环境）。
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  // 编译器选项
+  "compilerOptions": {
+    // 指定 TypeScript 编译输出的文件路径，用于增量编译优化。
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.tsbuildinfo",
+    // 设置模块解析的根目录为当前目录（即项目根目录）。
+    "baseUrl": ".",
+    // 路径映射：将 @ 指向 ./src/ 目录，方便在项目中使用绝对路径导入模块。
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    // 不允许有未使用的本地变量，启用此选项会在编译时提示或报错未使用的变量。
+    "noUnusedLocals": true,
+    // 不允许有未使用的函数参数，启用后会检查函数中未使用的参数。
+    "noUnusedParameters": true,
+    // 禁止 switch 语句中 case 没有 break 导致的“穿透”行为，提升代码安全性。
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": ["env.d.ts", "src/**/*", "src/**/*.vue", "vite.config.*"],
+  "exclude": ["node_modules", "dist"]
+}

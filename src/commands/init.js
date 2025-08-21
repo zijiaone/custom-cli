@@ -2,7 +2,7 @@ const chalk = require('chalk');
 const path = require('path');
 const fs = require('fs-extra');
 const inquirer = require('inquirer');
-const ora = require('ora');
+// const ora = require('ora');
 const { projectConfigPrompts } = require('../prompts/initPrompts');
 const { checkDirectoryExists } = require('../utils/file');
 

@@ -1,8 +1,10 @@
 node_modules
 .DS_Store
 package-lock.json
+!src/templates/**/package-lock.json
 yarn.lock
 .vscode
+!src/templates/**/.vscode
 .npmrc
 .idea
 build.yml
