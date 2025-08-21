@@ -1,0 +1,20 @@
+{
+  "editor.tabSize": 2,
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit"
+  },
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.patterns": {
+    "tsconfig.json": "tsconfig.*.json, env.d.ts",
+    "vite.config.*": "jsconfig*, vitest.config.*, cypress.config.*, playwright.config.*, .env.*",
+    "package.json": "package-lock.json, pnpm*, .yarnrc*, yarn*, .eslint*, eslint*, .prettier*, prettier*, .editorconfig, .stylelint*, commit*"
+  },
+  "eslint.enable": true,
+  "eslint.validate": ["javascript", "typescript", "javascriptreact", "typescriptreact", "html"],
+  "css.validate": false,
+  "stylelint.enable": true,
+  "stylelint.validate": ["css", "less", "postcss", "scss", "sass"],
+  "i18n-ally.localesPaths": ["src/locales"]
+}

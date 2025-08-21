@@ -1,0 +1,26 @@
+# https://editorconfig.org
+
+# 指定这是根目录配置文件，防止向上查找其他.editorconfig文件。
+root = true
+
+# 应用于所有文件的通用设置
+[*]
+# 设置文件字符编码为utf-8，确保跨平台兼容性。
+charset = utf-8
+# 设置缩进风格为空格，推荐用于大多数现代代码编辑器以保持一致性。
+indent_style = space
+# 当使用空格作为缩进时，每个缩进级别使用的空格数。
+indent_size = 2
+# 行尾符格式，lf代表Linux风格（\n），适合跨平台开发环境。
+end_of_line = lf
+# 在文件的最后一行插入一个换行符。这有助于版本控制系统正确处理文件末尾。
+insert_final_newline = true
+# 移除行尾多余的空白字符，有助于保持代码整洁。
+trim_trailing_whitespace = true
+
+# 特定于Markdown文件的设置
+[*.md]
+# Markdown文件不需要在最后添加一个新行，因为有些解析器对末尾的新行敏感。
+insert_final_newline = false
+# Markdown文件通常允许行尾有空白字符，因为它们可能会影响渲染结果。
+trim_trailing_whitespace = false
