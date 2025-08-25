@@ -26,6 +26,12 @@ const projectConfigPrompts = [
     choices: ['Vue', 'React'],
     default: 'Vue',
   },
+  {
+    type: 'confirm',
+    name: 'needI18n',
+    message: 'Do you need i18n support?',
+    default: true,
+  },
 ];
 
 /**

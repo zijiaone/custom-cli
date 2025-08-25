@@ -5,6 +5,7 @@ const inquirer = require('inquirer');
 const ora = require('ora');
 const { projectConfigPrompts } = require('../prompts/initPrompts');
 const { checkDirectoryExists, updatePackageJson } = require('../utils/file');
+const { setupI18n } = require('../utils/i18n');
 
 /**
  * 初始化项目
@@ -15,7 +16,7 @@ const { checkDirectoryExists, updatePackageJson } = require('../utils/file');
 const init = async () => {
   // 收集用户项目配置
   const answers = await inquirer.default.prompt(projectConfigPrompts);
-  const { projectName, framework } = answers;
+  const { projectName, framework, needI18n } = answers;
   // 解析项目完整路径
   const projectDir = path.resolve(process.cwd(), projectName);
   // 根据用户选择的框架复制模板文件
@@ -31,6 +32,9 @@ const init = async () => {
 
     // 更新package.json中的项目名称
     await updatePackageJson(projectDir, projectName);
+
+    // 处理国际化配置
+    await setupI18n(projectDir, framework, needI18n);
 
     spinner.stop();
 
