@@ -5,7 +5,7 @@ const prettierPlugin = require('eslint-plugin-prettier');
 
 module.exports = [
   {
-    ignores: ['node_modules/**', 'dist/**', 'build/**'],
+    ignores: ['node_modules/**', 'dist/**', 'build/**', 'src/templates/**'],
   },
   js.configs.recommended,
   prettierConfig,
