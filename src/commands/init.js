@@ -9,7 +9,11 @@ const { setupI18n } = require('../utils/i18n');
 
 /**
  * 初始化项目
- * 执行项目创建流程，包括收集用户配置、创建项目目录和生成项目文件
+ * @description 执行项目创建流程，主要功能：
+ * 1. 收集用户配置（项目名称、框架选择、国际化支持）
+ * 2. 创建项目目录结构
+ * 3. 复制对应框架的模板文件
+ * 4. 更新项目配置（package.json、国际化设置）
  * @async
  * @returns {Promise<void>}
  */
@@ -17,14 +21,15 @@ const init = async () => {
   // 收集用户项目配置
   const answers = await inquirer.default.prompt(projectConfigPrompts);
   const { projectName, framework, needI18n } = answers;
-  // 解析项目完整路径
+
+  // 准备项目路径
   const projectDir = path.resolve(process.cwd(), projectName);
-  // 根据用户选择的框架复制模板文件
   const templateDir = path.resolve(__dirname, '../templates', framework.toLowerCase());
 
-  // 检查项目目录是否已存在，如果存在则询问用户是否覆盖，并创建目录
+  // 检查并处理目录冲突
   await checkDirectoryExists(projectDir);
 
+  // 开始项目脚手架搭建
   const spinner = ora.default(`Scaffolding project in ${projectDir}...`).start();
   try {
     // 复制模板文件到项目目录
@@ -33,7 +38,7 @@ const init = async () => {
     // 更新package.json中的项目名称
     await updatePackageJson(projectDir, projectName);
 
-    // 处理国际化配置
+    // 根据用户选择处理国际化配置
     await setupI18n(projectDir, framework, needI18n);
 
     spinner.stop();
