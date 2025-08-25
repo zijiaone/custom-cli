@@ -7,6 +7,7 @@ const fs = require('fs-extra');
 const chalk = require('chalk');
 const ora = require('ora');
 const inquirer = require('inquirer');
+const path = require('path');
 const { overwritePrompts } = require('../prompts/initPrompts');
 
 /**
@@ -38,6 +39,30 @@ async function checkDirectoryExists(dirPath) {
   return true;
 }
 
+/**
+ * 更新项目的package.json文件中的项目名称
+ * @async
+ * @param {string} projectDir - 项目目录路径
+ * @param {string} projectName - 项目名称
+ * @returns {Promise<boolean>} - 更新成功返回true，失败返回false
+ */
+async function updatePackageJson(projectDir, projectName) {
+  try {
+    const packageJsonPath = path.join(projectDir, 'package.json');
+    if (await fs.pathExists(packageJsonPath)) {
+      const packageJson = await fs.readJson(packageJsonPath);
+      packageJson.name = projectName;
+      await fs.writeJson(packageJsonPath, packageJson, { spaces: 2 });
+      return true;
+    }
+    return false;
+  } catch (error) {
+    console.error(chalk.red(`❌ Error updating package.json: ${error.message}`));
+    return false;
+  }
+}
+
 module.exports = {
   checkDirectoryExists,
+  updatePackageJson,
 };
