@@ -15,20 +15,24 @@ const { setupI18n } = require('../utils/i18n');
  * @returns {Promise<void>}
  */
 const init = async (force = false) => {
-  // 收集用户项目配置
-  const answers = await inquirer.default.prompt(projectConfigPrompts);
-  const { projectName, framework, needI18n } = answers;
+  // 声明spinner变量在函数作用域内
+  let spinner;
 
-  // 准备项目路径
-  const projectDir = path.resolve(process.cwd(), projectName);
-  const templateDir = path.resolve(__dirname, '../templates', framework.toLowerCase());
-
-  // 检查并处理目录冲突
-  await checkDirectoryExists(projectDir, force);
-
-  // 开始项目脚手架搭建
-  const spinner = ora.default(`Scaffolding project in ${projectDir}...`).start();
   try {
+    // 收集用户项目配置
+    const answers = await inquirer.default.prompt(projectConfigPrompts);
+    const { projectName, framework, needI18n } = answers;
+
+    // 准备项目路径
+    const projectDir = path.resolve(process.cwd(), projectName);
+    const templateDir = path.resolve(__dirname, '../templates', framework.toLowerCase());
+
+    // 检查并处理目录冲突
+    await checkDirectoryExists(projectDir, force);
+
+    // 开始项目脚手架搭建
+    spinner = ora.default(`Scaffolding project in ${projectDir}...`).start();
+
     // 复制模板文件
     await fs.copy(templateDir, projectDir);
 
@@ -51,9 +55,20 @@ const init = async (force = false) => {
         ${chalk.cyan('npm run dev')}
     `);
   } catch (error) {
-    spinner.stop();
-    console.error(chalk.red(`❌ Error creating project: ${error.message}`));
-    process.exit(1); // 以非零状态码退出进程
+    // 停止加载动画（如果已启动）
+    if (spinner) {
+      spinner.stop();
+    }
+
+    // 处理用户中断（SIGINT）错误
+    if (error.name === 'ExitPromptError' || error.message.includes('SIGINT')) {
+      console.log(chalk.yellow('\n⚠️ Operation cancelled: Command execution interrupted by user'));
+      process.exit(0); // 正常退出，不显示错误堆栈
+    } else {
+      // 处理其他错误
+      console.error(chalk.red(`\n❌ Project creation failed: ${error.message}`));
+      process.exit(1); // 以非零状态码退出进程
+    }
   }
 };
 

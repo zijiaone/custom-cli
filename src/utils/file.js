@@ -32,7 +32,7 @@ async function checkDirectoryExists(dirPath, force = false) {
         spinner.stop();
       } else {
         // 用户取消操作
-        console.log(chalk.red('❌ Operation cancelled'));
+        console.log(chalk.yellow('⚠️ Operation cancelled'));
         process.exit(1);
       }
     }
