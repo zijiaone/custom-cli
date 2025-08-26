@@ -15,9 +15,10 @@ const { setupI18n } = require('../utils/i18n');
  * 3. 复制对应框架的模板文件
  * 4. 更新项目配置（package.json、国际化设置）
  * @async
+ * @param {boolean} force - 如果目标目录不为空，是否强制覆盖
  * @returns {Promise<void>}
  */
-const init = async () => {
+const init = async (force = false) => {
   // 收集用户项目配置
   const answers = await inquirer.default.prompt(projectConfigPrompts);
   const { projectName, framework, needI18n } = answers;
@@ -27,7 +28,7 @@ const init = async () => {
   const templateDir = path.resolve(__dirname, '../templates', framework.toLowerCase());
 
   // 检查并处理目录冲突
-  await checkDirectoryExists(projectDir);
+  await checkDirectoryExists(projectDir, force);
 
   // 开始项目脚手架搭建
   const spinner = ora.default(`Scaffolding project in ${projectDir}...`).start();
