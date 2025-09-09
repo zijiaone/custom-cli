@@ -48,6 +48,9 @@ const removeVueI18n = async (projectDir) => {
 
   // 写入更新后的内容
   await fs.writeFile(mainFilePath, mainContent, 'utf8');
+
+  // 修改README.md中的国际化相关内容
+  await removeI18nFromReadme(projectDir, 'vue');
 };
 
 /**
@@ -65,6 +68,9 @@ const removeReactI18n = async (projectDir) => {
 
   // 写入更新后的内容
   await fs.writeFile(mainFilePath, mainContent, 'utf8');
+
+  // 修改README.md中的国际化相关内容
+  await removeI18nFromReadme(projectDir, 'react');
 };
 
 /**
@@ -93,6 +99,32 @@ const removeI18nDependencies = async (projectDir, framework) => {
 
   // 写入更新后的package.json
   await fs.writeJson(packageJsonPath, packageJson, { spaces: 2 });
+};
+
+/**
+ * 从README.md中移除国际化相关内容
+ *
+ * @param {string} projectDir - 项目目录路径
+ * @param {string} framework - 项目框架（Vue/React）
+ * @returns {Promise<void>}
+ */
+const removeI18nFromReadme = async (projectDir, framework) => {
+  const readmePath = path.join(projectDir, 'README.md');
+  let readmeContent = await fs.readFile(readmePath, 'utf8');
+
+  // 从特性列表中移除国际化相关条目
+  if (framework === 'vue') {
+    readmeContent = readmeContent.replace('- 🌍 Vue I18n - 国际化\n', '');
+  } else if (framework === 'react') {
+    readmeContent = readmeContent.replace('- 🌍 React i18next - 国际化\n', '');
+  }
+
+  // 移除国际化部分的整个章节（包括前后空行）
+  const i18nSectionRegex = /\n### 国际化[\s\S]*?```typescript[\s\S]*?```\n/;
+  readmeContent = readmeContent.replace(i18nSectionRegex, '');
+
+  // 写入更新后的内容
+  await fs.writeFile(readmePath, readmeContent, 'utf8');
 };
 
 module.exports = {
