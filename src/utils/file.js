@@ -1,10 +1,9 @@
 const fs = require('fs-extra');
 const chalk = require('chalk');
-const ora = require('ora');
-const inquirer = require('inquirer');
+const { confirm, isCancel, cancel } = require('@clack/prompts');
 const path = require('path');
 
-const { overwritePrompts } = require('../prompts/initPrompts');
+const { overwritePrompt } = require('../prompts/initPrompts');
 
 /**
  * 检查目录是否存在并处理冲突
@@ -17,22 +16,22 @@ async function checkDirectoryExists(dirPath, force = false) {
   if (fs.existsSync(dirPath)) {
     if (force) {
       // 强制模式 - 直接删除目录
-      const spinner = ora.default(`Force removing target directory (${dirPath})`).start();
       await fs.rmSync(dirPath, { recursive: true, force: true });
-      spinner.stop();
     } else {
       // 交互模式 - 提示用户确认
-      console.log(chalk.yellow(`⚠️ Project directory already exists!`));
-      const { overwrite } = await inquirer.default.prompt(overwritePrompts);
+      console.log(chalk.yellow(`Project directory already exists!`));
+      const overwrite = await confirm(overwritePrompt);
+      if (isCancel(overwrite)) {
+        cancel('Operation cancelled');
+        process.exit(0);
+      }
 
       if (overwrite) {
         // 删除现有目录
-        const spinner = ora.default(`Removing target directory (${dirPath})`).start();
         await fs.rmSync(dirPath, { recursive: true, force: true });
-        spinner.stop();
       } else {
         // 用户取消操作
-        console.log(chalk.yellow('⚠️ Operation cancelled'));
+        cancel('Operation cancelled');
         process.exit(1);
       }
     }
@@ -65,7 +64,7 @@ async function updatePackageJson(projectDir, projectName) {
     return false; // package.json不存在
   } catch (error) {
     // 错误处理
-    console.error(chalk.red(`❌ Error updating package.json: ${error.message}`));
+    cancel(`Error updating package.json: ${error.message}`);
     return false;
   }
 }

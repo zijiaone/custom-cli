@@ -1,10 +1,9 @@
 const chalk = require('chalk');
 const path = require('path');
 const fs = require('fs-extra');
-const inquirer = require('inquirer');
-const ora = require('ora');
+const { intro, outro, cancel, isCancel, log } = require('@clack/prompts');
 
-const { projectConfigPrompts } = require('../prompts/initPrompts');
+const { collectUserInput } = require('../prompts/initPrompts');
 const { checkDirectoryExists, updatePackageJson } = require('../utils/file');
 const { setupI18n } = require('../utils/i18n');
 
@@ -15,13 +14,12 @@ const { setupI18n } = require('../utils/i18n');
  * @returns {Promise<void>}
  */
 const init = async (force = false) => {
-  // 声明spinner变量在函数作用域内
-  let spinner;
-
   try {
+    // 开始交互式提示
+    intro('Create Project');
+
     // 收集用户项目配置
-    const answers = await inquirer.default.prompt(projectConfigPrompts);
-    const { projectName, framework, needI18n } = answers;
+    const { projectName, framework, needI18n } = await collectUserInput();
 
     // 准备项目路径
     const projectDir = path.resolve(process.cwd(), projectName);
@@ -30,8 +28,7 @@ const init = async (force = false) => {
     // 检查并处理目录冲突
     await checkDirectoryExists(projectDir, force);
 
-    // 开始项目脚手架搭建
-    spinner = ora.default(`Scaffolding project in ${projectDir}...`).start();
+    log.step(`Scaffolding project in ${projectDir}...`);
 
     // 复制模板文件
     await fs.copy(templateDir, projectDir);
@@ -42,31 +39,22 @@ const init = async (force = false) => {
     // 处理国际化配置
     await setupI18n(projectDir, framework, needI18n);
 
-    spinner.stop();
-
     // 显示成功信息和后续步骤
-    console.log(`
+    outro(`✅ Successfully initialized the project!
+   👉 Please execute the following command:
 
-      ✅ Successfully initialized the project!
-      👉 Please execute the following command:
-
-        ${chalk.cyan(`cd ${projectName}`)}
-        ${chalk.cyan('npm install')}
-        ${chalk.cyan('npm run dev')}
+      ${chalk.cyan(`cd ${projectName}`)}
+      ${chalk.cyan('npm install')}
+      ${chalk.cyan('npm run dev')}
     `);
   } catch (error) {
-    // 停止加载动画（如果已启动）
-    if (spinner) {
-      spinner.stop();
-    }
-
-    // 处理用户中断（SIGINT）错误
-    if (error.name === 'ExitPromptError' || error.message.includes('SIGINT')) {
-      console.log(chalk.yellow('\n⚠️ Operation cancelled: Command execution interrupted by user'));
+    // 处理用户中断错误
+    if (isCancel(error) || error.name === 'ExitPromptError' || error.message.includes('SIGINT')) {
+      cancel('Operation cancelled');
       process.exit(0); // 正常退出，不显示错误堆栈
     } else {
       // 处理其他错误
-      console.error(chalk.red(`\n❌ Project creation failed: ${error.message}`));
+      cancel(`Project creation failed: ${error.message}`);
       process.exit(1); // 以非零状态码退出进程
     }
   }
