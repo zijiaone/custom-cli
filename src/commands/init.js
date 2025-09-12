@@ -10,19 +10,25 @@ const { setupI18n } = require('../utils/i18n');
 /**
  * 初始化项目函数
  *
+ * @param {string} projectNameArg - 命令行传入的项目名称或路径
  * @param {boolean} force - 是否强制删除目标目录内容
  * @returns {Promise<void>}
  */
-const init = async (force = false) => {
+const init = async (projectNameArg, force = false) => {
   try {
     // 开始交互式提示
     intro('Create Project');
 
     // 收集用户项目配置
-    const { projectName, framework, needI18n } = await collectUserInput();
+    const userInput = await collectUserInput(projectNameArg);
+    const { projectName, framework, needI18n } = userInput;
 
     // 准备项目路径
-    const projectDir = path.resolve(process.cwd(), projectName);
+    // 如果projectNameArg是相对路径或绝对路径，使用dirname作为基础路径
+    const projectDir =
+      projectNameArg && projectNameArg !== projectName
+        ? path.resolve(projectNameArg) // 使用完整路径
+        : path.resolve(process.cwd(), projectName); // 使用当前目录 + 项目名
     const templateDir = path.resolve(__dirname, '../templates', framework.toLowerCase());
 
     // 检查并处理目录冲突

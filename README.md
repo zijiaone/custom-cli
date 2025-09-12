@@ -13,14 +13,29 @@ npm install -g @zj/cli
 ### 创建新项目
 
 ```bash
-zj-cli init
+zj-cli init [project-name]
 ```
 
-按照提示输入项目信息：
+### 关于 `project-name` 参数
 
-- 项目名称（仅支持字母、数字、连字符和下划线）
-- 选择框架（Vue 或 React）
-- 是否需要国际化支持
+`project-name` 是**可选参数**，使用方式如下：
+
+- **不提供参数**：通过交互式提示输入项目名称
+  ```bash
+  zj-cli init
+  ```
+
+- **提供参数**：直接使用指定的名称，跳过项目名称的输入步骤
+  ```bash
+  zj-cli init my-project
+  ```
+
+- **提供带路径的参数**：在指定路径创建项目
+  ```bash
+  zj-cli init ./folderPath/my-project
+  ```
+
+无论是否提供 `project-name` 参数，您都需要完成其他配置项（如选择框架、是否需要国际化支持等）。
 
 ### 强制创建项目
 
@@ -28,6 +43,8 @@ zj-cli init
 
 ```bash
 zj-cli init -f
+zj-cli init my-project -f
+zj-cli init ./folderPath/my-project -f
 ```
 
 ### 查看帮助信息

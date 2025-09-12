@@ -55,14 +55,22 @@ const handleCancel = (value, isCancel, cancel) => {
 /**
  * 收集用户输入的项目配置信息
  *
+ * @param {string} projectNameArg - 命令行传入的项目名称或路径
  * @returns {Promise<Object>} 包含projectName、framework和needI18n的对象
  */
-const collectUserInput = async () => {
+const collectUserInput = async (projectNameArg) => {
   const { text, select, confirm, isCancel, cancel } = require('@clack/prompts');
+  const path = require('path');
 
   // 定义提示配置和对应的提示函数
   const promptConfigs = [
-    { key: 'projectName', prompt: projectConfigPrompts.projectName, fn: text },
+    {
+      key: 'projectName',
+      prompt: projectNameArg
+        ? { ...projectConfigPrompts.projectName, initialValue: projectNameArg }
+        : projectConfigPrompts.projectName,
+      fn: projectNameArg ? () => Promise.resolve(projectNameArg) : text,
+    },
     { key: 'framework', prompt: projectConfigPrompts.framework, fn: select },
     { key: 'needI18n', prompt: projectConfigPrompts.needI18n, fn: confirm },
   ];
@@ -70,7 +78,14 @@ const collectUserInput = async () => {
   // 使用循环遍历收集用户输入
   const result = {};
   for (const { key, prompt, fn } of promptConfigs) {
-    result[key] = handleCancel(await fn(prompt), isCancel, cancel);
+    // 如果是项目名称且已通过命令行提供，则直接使用
+    if (key === 'projectName' && projectNameArg) {
+      // 如果是路径，提取最后一部分作为项目名称
+      const basename = path.basename(projectNameArg);
+      result[key] = basename;
+    } else {
+      result[key] = handleCancel(await fn(prompt), isCancel, cancel);
+    }
   }
 
   return result;

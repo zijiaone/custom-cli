@@ -17,16 +17,18 @@ program
 
 // 注册 init 命令
 program
-  .command('init')
+  .command('init [project-name]')
   .description('initialize a new Vue or React project')
   .option('-f, --force', 'force delete contents if target directory is not empty')
   .addHelpText(
     'after',
     `\nExamples: 
-    ${chalk.cyan('zj-cli init')}         # Create a new project
-    ${chalk.cyan('zj-cli init -f')}      # Force create even if directory exists\n`,
+    ${chalk.cyan('zj-cli init')}                        # Create a new project with interactive prompt
+    ${chalk.cyan('zj-cli init my-project')}             # Create a project named my-project
+    ${chalk.cyan('zj-cli init ./folderPath/my-project')} # Create my-project in folderPath directory
+    ${chalk.cyan('zj-cli init -f')}                     # Force create even if directory exists\n`,
   )
-  .action((options) => init(options.force));
+  .action((projectName, options) => init(projectName, options.force));
 
 // 自定义帮助信息
 program.on('--help', () => {
