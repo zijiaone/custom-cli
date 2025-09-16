@@ -37,9 +37,14 @@ async function checkDirectoryExists(dirPath, force = false) {
     }
   }
 
-  // 创建目录
-  fs.mkdirSync(dirPath);
-  return true;
+  // 创建目录（包括所有父目录）
+  try {
+    fs.mkdirSync(dirPath, { recursive: true });
+    return true;
+  } catch (error) {
+    cancel(`Project creation failed: ${error.message}`);
+    process.exit(1);
+  }
 }
 
 /**
@@ -69,7 +74,21 @@ async function updatePackageJson(projectDir, projectName) {
   }
 }
 
+/**
+ * 解析项目路径
+ *
+ * @param {string} projectNameArg - 命令行传入的项目名称或路径
+ * @param {string} projectName - 用户输入的项目名称
+ * @returns {string} - 解析后的完整项目路径
+ */
+function resolveProjectPath(projectNameArg, projectName) {
+  return projectNameArg && projectNameArg !== projectName
+    ? path.resolve(projectNameArg) // 使用完整路径
+    : path.resolve(process.cwd(), projectName); // 使用当前目录 + 项目名
+}
+
 module.exports = {
   checkDirectoryExists,
   updatePackageJson,
+  resolveProjectPath,
 };

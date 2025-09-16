@@ -4,7 +4,7 @@ const fs = require('fs-extra');
 const { intro, outro, cancel, isCancel, log } = require('@clack/prompts');
 
 const { collectUserInput } = require('../prompts/initPrompts');
-const { checkDirectoryExists, updatePackageJson } = require('../utils/file');
+const { checkDirectoryExists, updatePackageJson, resolveProjectPath } = require('../utils/file');
 const { setupI18n } = require('../utils/i18n');
 
 /**
@@ -24,11 +24,7 @@ const init = async (projectNameArg, force = false) => {
     const { projectName, framework, needI18n } = userInput;
 
     // 准备项目路径
-    // 如果projectNameArg是相对路径或绝对路径，使用dirname作为基础路径
-    const projectDir =
-      projectNameArg && projectNameArg !== projectName
-        ? path.resolve(projectNameArg) // 使用完整路径
-        : path.resolve(process.cwd(), projectName); // 使用当前目录 + 项目名
+    const projectDir = resolveProjectPath(projectNameArg, projectName);
     const templateDir = path.resolve(__dirname, '../templates', framework.toLowerCase());
 
     // 检查并处理目录冲突
